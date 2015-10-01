@@ -137,7 +137,6 @@ class RelativeTime
       @formatDate()
 
   toTimeOrWeekdayOrDateString: ->
-    console.log(@calendarDate)
     if @calendarDate.isToday()
       @formatTime()
     else if @calendarDate.daysPassed() < 7
