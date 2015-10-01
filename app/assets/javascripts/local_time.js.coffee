@@ -136,6 +136,15 @@ class RelativeTime
     else
       @formatDate()
 
+  toTimeOrWeekdayOrDateString: ->
+    console.log(@calendarDate)
+    if @calendarDate.isToday()
+      @formatTime()
+    else if @calendarDate.daysPassed() < 7
+      @relativeWeekday()
+    else
+      @formatDate()
+
   timeElapsed: ->
     ms  = new Date().getTime() - @date.getTime()
     sec = Math.round ms  / 1000
@@ -169,12 +178,12 @@ class RelativeTime
         strftime @date, "%A"
 
   formatDate: ->
-    format = "%b %e"
-    format += ", %Y" unless @calendarDate.occursThisYear()
+    format = "%e %b"
+    format += " %Y" unless @calendarDate.occursThisYear()
     strftime @date, format
 
   formatTime: ->
-    strftime @date, '%l:%M%P'
+    strftime @date, '%l:%M %P'
 
 relativeDate = (date) ->
   new RelativeTime(date).formatDate()
@@ -184,6 +193,9 @@ relativeTimeAgo = (date) ->
 
 relativeTimeOrDate = (date) ->
   new RelativeTime(date).toTimeOrDateString()
+
+relativeTimeOrWeekdayOrDate = (date) ->
+  new RelativeTime(date).toTimeOrWeekdayOrDateString()
 
 relativeWeekday = (date) ->
   if day = new RelativeTime(date).relativeWeekday()
@@ -235,6 +247,8 @@ document.addEventListener "DOMContentLoaded", ->
           relativeTimeAgo time
         when "time-or-date"
           relativeTimeOrDate time
+        when "time-weekday-or-date"
+          relativeTimeOrWeekdayOrDate time
         when "weekday"
           relativeWeekday(time) ? ""
         when "weekday-or-date"
@@ -248,4 +262,4 @@ run = ->
 setInterval run, 60 * 1000
 
 # Public API
-@LocalTime = {relativeDate, relativeTimeAgo, relativeTimeOrDate, relativeWeekday, run, strftime}
+@LocalTime = {relativeDate, relativeTimeAgo, relativeTimeOrDate, relativeTimeOrWeekdayOrDate, relativeWeekday, run, strftime}
